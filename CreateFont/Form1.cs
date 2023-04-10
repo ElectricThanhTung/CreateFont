@@ -164,6 +164,7 @@ namespace CreateFont {
 
         private List<FontData> CreateFontList(char[] list, Font font) {
             List<FontData> fontList = new List<FontData>();
+            FontData A = CreateDataFont('A', font);
             for(int i = 0; i < list.Length; i++) {
                 FontData data;
                 try {
@@ -172,32 +173,38 @@ namespace CreateFont {
                 catch {
                     data = CreateDataFont('?', font);
                 }
+                data.Offset -= A.Offset;
                 fontList.Add(data);
             }
             return fontList;
         }
 
+        private string ByteToHex(int value) {
+            StringBuilder builder = new StringBuilder();
+            builder.Append("0x");
+            builder.Append(((byte)value).ToString("X2"));
+            return builder.ToString();
+        }
+
         private string IntToArray(int value) {
             StringBuilder builder = new StringBuilder();
             if(littleEndian.Checked == true) {
-                builder.Append("0x");
-                builder.Append(((value >> 0) & 0xFF).ToString("X2"));
-                builder.Append(", 0x");
-                builder.Append(((value >> 8) & 0xFF).ToString("X2"));
-                builder.Append(", 0x");
-                builder.Append(((value >> 16) & 0xFF).ToString("X2"));
-                builder.Append(", 0x");
-                builder.Append(((value >> 24) & 0xFF).ToString("X2"));
+                builder.Append(ByteToHex(value >> 0));
+                builder.Append(", ");
+                builder.Append(ByteToHex(value >> 8));
+                builder.Append(", ");
+                builder.Append(ByteToHex(value >> 16));
+                builder.Append(", ");
+                builder.Append(ByteToHex(value >> 24));
             }
             else {
-                builder.Append("0x");
-                builder.Append(((value >> 24) & 0xFF).ToString("X2"));
-                builder.Append(", 0x");
-                builder.Append(((value >> 16) & 0xFF).ToString("X2"));
-                builder.Append(", 0x");
-                builder.Append(((value >> 8) & 0xFF).ToString("X2"));
-                builder.Append(", 0x");
-                builder.Append(((value >> 0) & 0xFF).ToString("X2"));
+                builder.Append(ByteToHex(value >> 24));
+                builder.Append(", ");
+                builder.Append(ByteToHex(value >> 16));
+                builder.Append(", ");
+                builder.Append(ByteToHex(value >> 8));
+                builder.Append(", ");
+                builder.Append(ByteToHex(value >> 0));
             }
             return builder.ToString();
         }
@@ -231,15 +238,15 @@ namespace CreateFont {
 
                 fontRawData.Append("    ");
                 fontRawData.Append(IntToArray(fontList[i].Unicode));
-                fontRawData.Append(", 0x");
-                fontRawData.Append(fontList[i].Width.ToString("X2"));
-                fontRawData.Append(", 0x");
-                fontRawData.Append(fontList[i].Height.ToString("X2"));
-                fontRawData.Append(", 0x");
-                fontRawData.Append(fontList[i].Offset.ToString("X2"));
+                fontRawData.Append(", ");
+                fontRawData.Append(ByteToHex(fontList[i].Width));
+                fontRawData.Append(", ");
+                fontRawData.Append(ByteToHex(fontList[i].Height));
+                fontRawData.Append(", ");
+                fontRawData.Append(ByteToHex(fontList[i].Offset));
                 foreach(byte data in fontList[i].Data) {
-                    fontRawData.Append(", 0x");
-                    fontRawData.Append(data.ToString("X2"));
+                    fontRawData.Append(", ");
+                    fontRawData.Append(ByteToHex(data));
                 }
                 fontRawData.Append(", // '");
                 fontRawData.Append(list[i].ToString());
