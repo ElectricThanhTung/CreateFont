@@ -145,11 +145,10 @@ namespace CreateFont {
             solidBrush.Dispose();
             graphics.Dispose();
 
-            int line = (y_end - y_start) / 8;
-            if(((y_end - y_start) % 8) > 0)
-                line++;
+            int line = (y_end - y_start + (8 - 1)) / 8;
 
-            int w = (x_end - x_start);
+            int w = x_end - x_start;
+            int h = y_end - y_start;
             byte[] data = new byte[w * line];
             for(int x = x_start; x < x_end; x++) {
                 for(int y = y_start; y < y_end; y++) {
@@ -159,7 +158,7 @@ namespace CreateFont {
             }
             bitmap.Dispose();
 
-            return new FontData((int)c, w, line, y_start, data);
+            return new FontData((int)c, w, h, y_start, data);
         }
 
         private List<FontData> CreateFontList(char[] list, Font font) {

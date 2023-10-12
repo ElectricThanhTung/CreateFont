@@ -103,6 +103,10 @@
             "26",
             "28",
             "36",
+            "40",
+            "42",
+            "44",
+            "46",
             "48",
             "72"});
             this.comboBox1.Location = new System.Drawing.Point(295, 174);
