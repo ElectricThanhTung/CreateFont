@@ -260,8 +260,12 @@ namespace CreateFont {
             ret.Append(name.Replace(" ", ""));
             ret.AppendLine("[] = {");
             ret.Append("    ");
-            ret.Append(IntToArray(fontList.Count));
-            ret.AppendLine(", // font count value");
+            int temp = (ushort)fontList.Count;
+            fontList = CreateFontList(" A".ToCharArray(), font);
+            temp |= fontList[0].Width << 16;
+            temp |= fontList[1].Height << 24;
+            ret.Append(IntToArray(temp));
+            ret.AppendLine(", // count (U16), space width (U8), std height (U8)");
             ret.Append(fontIndexList);
             ret.Append(fontRawData);
             ret.Append("};");

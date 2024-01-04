@@ -121,8 +121,6 @@
     <Content Include="icon.ico" />
     <None Include="Resources\font_h.h" />
     <None Include="Resources\font_c.c" />
-    <None Include="Resources\font.h" />
-    <None Include="Resources\font.c" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
