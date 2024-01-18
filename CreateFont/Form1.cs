@@ -84,10 +84,11 @@ namespace CreateFont {
             Graphics graphics = Graphics.FromImage(bitmap);
             if(c == ' ') {
                 int space_w = (int)graphics.MeasureString(" ", font).Width;
+                int byteCount = (space_w + 7) / 8;
                 graphics.Dispose();
                 bitmap.Dispose();
 
-                return new FontData((int)c, space_w, 1, 0, new byte[space_w]);
+                return new FontData((int)c, space_w, 1, 0, new byte[byteCount]);
             }
 
             SolidBrush solidBrush = new SolidBrush(Color.Black);
@@ -145,15 +146,16 @@ namespace CreateFont {
             solidBrush.Dispose();
             graphics.Dispose();
 
-            int line = (y_end - y_start + (8 - 1)) / 8;
-
             int w = x_end - x_start;
             int h = y_end - y_start;
-            byte[] data = new byte[w * line];
+            byte[] data = new byte[(w * h + 7) / 8];
             for(int x = x_start; x < x_end; x++) {
                 for(int y = y_start; y < y_end; y++) {
-                    if(bitmap.GetPixel(x, y).R < 128)
-                        data[(x - x_start) + ((y - y_start) / 8) * w] |= (byte)(0x80 >> ((y - y_start) % 8));
+                    if(bitmap.GetPixel(x, y).R < 128) {
+                        int bitIndex = (x - x_start) + (y - y_start) * w;
+                        int byteIndex = bitIndex / 8;
+                        data[bitIndex / 8] |= (byte)(0x01 << (bitIndex % 8));
+                    }
                 }
             }
             bitmap.Dispose();
