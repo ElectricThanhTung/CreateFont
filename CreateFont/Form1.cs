@@ -301,7 +301,12 @@ namespace CreateFont {
                 if (arr_name == "")
                     arr_name = fontComboBox1.Text.Replace(" ", "_");
 
-                string list = textBox2.Text;
+                string list = "";
+                for(int i = 0; i < textBox2.Text.Length; i++) {
+                    char c = textBox2.Text[i];
+                    if(!list.Contains(c + ""))
+                        list += c;
+                }
                 list = Regex.Replace(list, "(\r|\n)", "");
                 if (list == "") 
                     list = defaultList;
